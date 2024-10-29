@@ -18,8 +18,8 @@ while (true) // раунд
 {
     // ход игрока
     Console.WriteLine("Введите ваш вариант:");
-
     string temp = Console.ReadLine();
+    
     int varUserInt = Game.GetVarUserInt(temp);  // для поиска в  матрице 
    
     if (varUserInt == -1) // если не  нашли вариант в  массиве 
@@ -40,15 +40,13 @@ while (true) // раунд
     Console.WriteLine("__________");
 
     
-    totalUser += Game.IsVinUser(varUserInt, varPKint);
-    totalPK += Game.IsVinPK(varPKint, varUserInt);
+    totalUser += Game.IsVin(varUserInt, varPKint);
+    totalPK += Game.IsVin(varPKint, varUserInt);
     
     // при  ничье  счет не  меняется  -- такую ситуации  отрабатывать вообще не  будем 
 
-    Console.WriteLine($"Результат раунда {raund}:");
-    Console.WriteLine(Game.GetMessageUser(varUserInt, varPKint));     // вывод из матрицы  за  юзера 
-    Console.WriteLine(Game.GetMessagePK (varPKint, varUserInt));   // вывод из матрицы  за  пк 
-
+    Console.WriteLine(Game.GetMessageRaund(varUserInt, varPKint , raund));     // вывод из матрицы  за  юзера 
+    
     Console.WriteLine("__________");
     Console.WriteLine($"Общий счёт игры: \nЧеловек:{totalUser} | Компьютер:{totalPK}");
 

@@ -42,7 +42,6 @@
             return random.Next(0, GetVariantsStep().Length);
         }
 
-
         public static string GetVariantForIndex(int i)
         {
             var variantsStep = GetVariantsStep();
@@ -52,8 +51,7 @@
                 return "error";
         }
 
-
-        public static int IsVinUser(int us, int pk)
+        public static int IsVin(int us, int pk)
         {
             var variantsGame = GetVariantsGame();
 
@@ -63,26 +61,21 @@
             return 0;
         }
 
-
-        public static int IsVinPK(int pk, int us)
+        public static string GetMessageRaund (int us, int pk , int  raund)
         {
-            var variantsGame = GetVariantsGame();
-
-            if (variantsGame[pk, us] == "победа")
-                return 1;
-
-            return 0;
+            string s = $"Результат раунда {raund}:" + "\n";
+            s += GetMessageUser(us, pk) +"\n";
+            return s+= GetMessagePK(us,pk);
         }
 
-
-        public static string GetMessageUser(int us, int pk)
+        private static string GetMessageUser(int us, int pk)
         {
             var variantsGame = GetVariantsGame();
             return $"Человек  - {variantsGame[us, pk]}";     // вывод из матрицы  за  юзера 
 
         }
 
-        public static string GetMessagePK(int pk, int us)
+        private static string GetMessagePK(int pk, int us)
         {
             var variantsGame = GetVariantsGame();
             return $"Компьютер  - {variantsGame[pk, us]}";     // вывод из матрицы  за  юзера 
