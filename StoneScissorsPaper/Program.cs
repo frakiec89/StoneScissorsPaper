@@ -39,15 +39,10 @@ while (true) // раунд
     // итоги 
     Console.WriteLine("__________");
 
-    if (Game.IsVinUser(varUserInt , varPKint) ==true)  // проверка победы юзера
-    {
-        totalUser++;
-    }
-
-    if (Game.IsVinPK( varPKint , varUserInt) == true) // поражение  юзера  -> победа  за  пк ,  хотя тут можно трактовать по разнаму 
-    {
-        totalPK++;
-    }
+    
+    totalUser += Game.IsVinUser(varUserInt, varPKint);
+    totalPK += Game.IsVinPK(varPKint, varUserInt);
+    
     // при  ничье  счет не  меняется  -- такую ситуации  отрабатывать вообще не  будем 
 
     Console.WriteLine($"Результат раунда {raund}:");

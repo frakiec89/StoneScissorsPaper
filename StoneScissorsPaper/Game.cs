@@ -53,25 +53,25 @@
         }
 
 
-        public static bool IsVinUser(int us, int pk)
+        public static int IsVinUser(int us, int pk)
         {
             var variantsGame = GetVariantsGame();
 
             if (variantsGame[us, pk] == "победа")
-                return true;
+                return 1;
 
-            return false;
+            return 0;
         }
 
 
-        public static bool IsVinPK(int pk, int us)
+        public static int IsVinPK(int pk, int us)
         {
             var variantsGame = GetVariantsGame();
 
             if (variantsGame[pk, us] == "победа")
-                return true;
+                return 1;
 
-            return false;
+            return 0;
         }
 
 
