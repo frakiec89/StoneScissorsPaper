@@ -1,84 +1,158 @@
 ﻿namespace StoneScissorsPaper
 {
+
+    /// <summary>
+    /// Игра "камень", "ножницы", "бумага" -Сначала вызовите  -> StepUserEndPR (Для хода человека )
+    /// Потом посмотрите отчет  о  раунде-> GetMessageRaund
+    /// </summary>
     public class Game
     {
-        private static string[] GetVariantsStep()
-        {
-            return new string[] { "камень", "ножницы", "бумага" }; //варианты игры  - при желании можно  разширить
-        }
+        //логика  игры 
 
-        private static string[,] GetVariantsGame()
-        {
-            string[,] variantsGame = new string[,]  // матрица  побед  - см скрин  на  лайв борде - 
-                        {
-                            { "ничья"     , "победа"    , "поражение" },       // строка - игрок  - столбец  противник
-                            { "поражение" , "ничья"     , "победа"    },
-                            { "победа"    , "поражение" , "ничья"     },
-                        };
+        // поля 
 
-            return variantsGame;
-        }
+        /// <summary>
+        /// массив строк -  варианты игры  (если хотим можем потом добавить  еще  вариантов)
+        /// </summary>
+        private string[] _variantsStep = new string[] { "камень", "ножницы", "бумага" };
+       
+        /// <summary>
+        /// поле. ход человека  в  int
+        /// </summary>
+        private int _steepUs; // ход  юзера  
 
-        public static int GetVarUserInt(string variant)
-        {
-            bool flag = false; // для  выхода если что  
-            var variantsStep = GetVariantsStep();
-            for (int i = 0; i < GetVariantsStep().Length; i++) // поиск  в  массиве 
+        /// <summary>
+        /// поле. ход  пк  в  int
+        /// </summary>
+        private int _steepPk;  // ход пк
+
+        // свойсва 
+
+
+        /// <summary>
+        /// Свойство .  Варианты ходов - берет  из _variantsStep
+        /// </summary>
+        public string[] GetVariantsStep {  get { return _variantsStep; } } // можно  только прочитать  берет  из  поля   _variantsStep ( см выше)
+
+        /// <summary>
+        /// Свойство (приватное). матрица вариантов
+        /// </summary>
+        string[,] GetVariantsGame  // можно  только прочитать   // ленивое  свойство  -> для  него не  созданно отдельное  поле как для  GetVariantsStep
+        {   
+            get   // получить
             {
-                if (variantsStep[i] == variant)
+                 return   new string[,]  // матрица  побед  - см скрин  на  лайв борде - 
+                 {
+                    { "ничья"     , "победа"    , "поражение" },       // строка - игрок  - столбец  противник
+                    { "поражение" , "ничья"     , "победа"    },
+                    { "победа"    , "поражение" , "ничья"     }
+                 };
+            }
+        }
+
+        /// <summary>
+        /// свойсво. Номер раунда
+        /// </summary>
+        public int Raund { get; private set; } // поменять из вне нельзя
+        /// <summary>
+        ///  свойсво. очки человека
+        /// </summary>
+        
+        public int TotalUser { get; private set; } // поменять из вне нельзя
+        
+        /// <summary>
+        ///  свойсво. очки пк
+        /// </summary>
+        public int TotalPK { get; private set; }  // поменять из вне нельзя
+
+
+        /// <summary>
+        ///Свойство. Для вывода  на  экран - ход за компьютера в тексте
+        /// </summary>
+        public string GetVarPK { get { return GetVarPKString(); /* ленивое  свойство ->  поля  нет...  где то  внизу  метод*/} }
+
+        /// <summary>
+        /// ОСНОВНОЙ  МЕТОД! ход человека  -> Вернет  true если верно,  то  будет игра 
+        /// </summary>
+        /// <param name="variant"></param>
+        /// <returns>false  если ход не  корректный</returns>
+        public  bool StepUserEndPR(string variant)
+        {
+            for (int i = 0; i < GetVariantsStep.Length; i++) // поиск  в  массиве 
+            {
+                if (GetVariantsStep[i] == variant) // если есть
                 {
-                    flag = true;
-                    return i;
+                    _steepUs = i;   // запомним ход
+                    GetVarRandomPK(); // сгенерим  ход  за  пк 
+                    IsVin();   // найдем  победителя  -  определим счет 
+                    Raund++;  // увеличим раунд
+                    return true; // скажим миру что  ход  состоялся 
                 }
             }
+            return false;  // ход не  состоялся
+        }
 
-            return -1; // пока времменно  
+        /// <summary>
+        /// МЕТОД! итог раунда  - вызывается полсе хода 
+        /// </summary>
+        /// <returns></returns>
+        public string GetMessageRaund()  // результаты раунда  
+        {
+
+            string s = $"Результат раунда {Raund}:" + "\n";
+            s += $"Ход компьютера: {GetVarPK}" + "\n";
+            s += GetMessageUser(_steepUs, _steepPk) + "\n";
+            return s += GetMessagePK(_steepPk, _steepUs);
         }
 
 
-        public static int GetVarPK()
+        #region приватные  методы 
+
+        /// <summary>
+        /// приватный метод  - ход за  пк 
+        /// </summary>
+        private void GetVarRandomPK()   
         {
-            Random random = new Random();
-            return random.Next(0, GetVariantsStep().Length);
+             Random random = new Random (DateTime.Now.Microsecond); //  DateTime.Now.Microsecond -->
+                                                                    //  определяет  микросекунду на  пк - (входной параметр в Random)
+                                                                    //  Для  более точного псевдоRandom
+
+            _steepPk = random.Next( GetVariantsStep.Length); // запомним _steepPk
         }
 
-        public static string GetVariantForIndex(int i)
+        /// <summary>
+        /// возвращает  ход  за  пк --> логика для свойства GetVarPK  - смотри вверх 
+        /// </summary>
+        /// <returns></returns>
+        private string GetVarPKString() 
         {
-            var variantsStep = GetVariantsStep();
-            if (i < variantsStep.Length)
-                return variantsStep[i];
+            if (_steepPk < GetVariantsStep.Length)
+                return GetVariantsStep[_steepPk];
             else
                 return "error";
         }
 
-        public static int IsVin(int us, int pk)
+        /// <summary>
+        /// логика  для опеределения  победителя 
+        /// </summary>
+        private void IsVin() 
         {
-            var variantsGame = GetVariantsGame();
+            if (GetVariantsGame[_steepUs, _steepPk] == "победа")
+                TotalUser++; // победа человека 
 
-            if (variantsGame[us, pk] == "победа")
-                return 1;
-
-            return 0;
+            if (GetVariantsGame[_steepPk, _steepUs] == "победа")
+                TotalPK++; // победа PK 
         }
 
-        public static string GetMessageRaund (int us, int pk , int  raund)
+        private string GetMessageUser(int us, int pk)
         {
-            string s = $"Результат раунда {raund}:" + "\n";
-            s += GetMessageUser(us, pk) +"\n";
-            return s+= GetMessagePK(us,pk);
+            return $"Человек - {GetVariantsGame[us, pk]}";     // вывод из матрицы  за  юзера 
+        }
+        private string GetMessagePK(int pk, int us)
+        {
+            return $"Компьютер - {GetVariantsGame[pk, us]}";     // вывод из матрицы  за  пк 
         }
 
-        private static string GetMessageUser(int us, int pk)
-        {
-            var variantsGame = GetVariantsGame();
-            return $"Человек  - {variantsGame[us, pk]}";     // вывод из матрицы  за  юзера 
-
-        }
-
-        private static string GetMessagePK(int pk, int us)
-        {
-            var variantsGame = GetVariantsGame();
-            return $"Компьютер  - {variantsGame[pk, us]}";     // вывод из матрицы  за  юзера 
-        }
+        #endregion
     }
 }

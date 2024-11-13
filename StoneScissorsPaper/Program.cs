@@ -1,4 +1,5 @@
 ﻿// track
+
 // Важно !!! подобные аглритмы могут  быть разными
 // -- если попросить  10 разных  программистов  написать  такую  игру - код  будет  у  всех максимально разный )
 // так что  я  не  наставию на  том  что  мое  исполнение  каноничное  
@@ -6,11 +7,7 @@
 // подготовка 
 
 using StoneScissorsPaper;
-
-int raund = 0; // будем считать  раунды
-
-int totalUser = 0; // будем  вести счет  игры
-int totalPK = 0;
+Game game = new Game();
 
 Console.WriteLine("Игра \"камень ножницы бумага\""); // старт  игры
 
@@ -20,35 +17,22 @@ while (true) // раунд
     Console.WriteLine("Введите ваш вариант:");
     string temp = Console.ReadLine();
     
-    int varUserInt = Game.GetVarUserInt(temp);  // для поиска в  матрице 
+    bool f = game.StepUserEndPR(temp);  // раунд 
    
-    if (varUserInt == -1) // если не  нашли вариант в  массиве 
+    if (f == false) // если не состялся 
     {
         Console.WriteLine("Такого варинта нет");
         continue; // пропустить  все что  ниже  - начнем  раунд занова
     }
 
-    raund++; // если  ввод  удачный  -раунд состоится 
-
-    // ход  пк 
-
-    int varPKint = Game.GetVarPK();  // рандом  их диапазона  массива  // 0 до  3 (3 не включать) тоесть 0 ,1 ,2 
-   
-    Console.WriteLine($"Ход компьютера: {Game.GetVariantForIndex(varPKint)}");
-
     // итоги 
     Console.WriteLine("__________");
 
-    
-    totalUser += Game.IsVin(varUserInt, varPKint);
-    totalPK += Game.IsVin(varPKint, varUserInt);
-    
-    // при  ничье  счет не  меняется  -- такую ситуации  отрабатывать вообще не  будем 
-
-    Console.WriteLine(Game.GetMessageRaund(varUserInt, varPKint , raund));     // вывод из матрицы  за  юзера 
+    Console.WriteLine(game.GetMessageRaund());    
     
     Console.WriteLine("__________");
-    Console.WriteLine($"Общий счёт игры: \nЧеловек:{totalUser} | Компьютер:{totalPK}");
+
+    Console.WriteLine($"Общий счёт игры: \nЧеловек:{game.TotalUser} | Компьютер:{game.TotalPK}"); // при  желании  можно  сделать  метод в классе  game 
 
     Console.WriteLine("__________\n"); // для  красоты 
 }
