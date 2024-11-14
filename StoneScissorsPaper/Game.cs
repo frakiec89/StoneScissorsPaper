@@ -150,7 +150,7 @@
         }
         private string GetMessagePK(int pk, int us)
         {
-            return $"Компьютер - {GetVariantsGame[pk, us]}";     // вывод из матрицы  за  пк 
+            return $"Компьютер - {GetVariantsGame[us, pk]}";     // вывод из матрицы  за  пк 
         }
 
         #endregion
