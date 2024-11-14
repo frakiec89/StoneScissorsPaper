@@ -78,7 +78,7 @@
         private static string GetMessagePK(int pk, int us)
         {
             var variantsGame = GetVariantsGame();
-            return $"Компьютер  - {variantsGame[pk, us]}";     // вывод из матрицы  за  юзера 
+            return $"Компьютер  - {variantsGame[us, pk]}";     // вывод из матрицы  за  юзера 
         }
     }
 }
