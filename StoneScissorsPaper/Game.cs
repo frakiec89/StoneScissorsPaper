@@ -1,6 +1,5 @@
 ﻿namespace StoneScissorsPaper
 {
-
     /// <summary>
     /// Игра "камень", "ножницы", "бумага" -Сначала вызовите  -> StepUserEndPR (Для хода человека )
     /// Потом посмотрите отчет  о  раунде-> GetMessageRaund
